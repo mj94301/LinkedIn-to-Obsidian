@@ -1,0 +1,10 @@
+=IFS(
+    OR(ISNUMBER(SEARCH("real estate", G2)), ISNUMBER(SEARCH("facilities", G2)), ISNUMBER(SEARCH("property", G2)), ISNUMBER(SEARCH("workplace", G2)), ISNUMBER(SEARCH("leasing", G2))), "Real Estate & Facilities Management",
+    OR(ISNUMBER(SEARCH("sustainability", G2)), ISNUMBER(SEARCH("ESG", G2)), ISNUMBER(SEARCH("climate", G2)), ISNUMBER(SEARCH("environment", G2))), "Sustainability & ESG",
+    OR(ISNUMBER(SEARCH("operations", G2)), ISNUMBER(SEARCH("strategy", G2)), ISNUMBER(SEARCH("business", G2)), ISNUMBER(SEARCH("transformation", G2)), ISNUMBER(SEARCH("process", G2))), "Operations & Business Strategy",
+    OR(ISNUMBER(SEARCH("security", G2)), ISNUMBER(SEARCH("risk", G2)), ISNUMBER(SEARCH("compliance", G2))), "Security & Risk Management",
+    OR(ISNUMBER(SEARCH("marketing", G2)), ISNUMBER(SEARCH("sales", G2)), ISNUMBER(SEARCH("client", G2)), ISNUMBER(SEARCH("business development", G2)), ISNUMBER(SEARCH("investor", G2))), "Marketing, Sales & Client Engagement",
+    OR(ISNUMBER(SEARCH("finance", G2)), ISNUMBER(SEARCH("investment", G2)), ISNUMBER(SEARCH("private equity", G2))), "Finance & Investment",
+    OR(ISNUMBER(SEARCH("HR", G2)), ISNUMBER(SEARCH("human resources", G2)), ISNUMBER(SEARCH("talent", G2)), ISNUMBER(SEARCH("people", G2))), "Human Resources & Talent Management",
+    TRUE, "Other"
+)

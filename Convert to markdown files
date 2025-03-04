@@ -1,0 +1,68 @@
+import pandas as pd
+import os
+import re
+
+# Define the input CSV file
+csv_file = "LinkedIn_Connections_Download_20250302.csv"
+
+# Read the CSV file
+try:
+    df = pd.read_csv(csv_file)
+except Exception as e:
+    print(f"Error reading CSV file: {e}")
+    exit()
+
+# Ensure expected columns exist in the CSV
+required_columns = ['First Name', 'Last Name', 'URL', 'Company', 'LinkedIn_Company', 'Position', 'Position Category', 'Connected On']
+for col in required_columns:
+    if col not in df.columns:
+        print(f"Missing column: {col} in CSV file")
+        exit()
+
+# Define output directory
+output_dir = "LinkedIn_Connections_MD"
+os.makedirs(output_dir, exist_ok=True)
+
+# Function to sanitize filenames
+def sanitize_filename(name):
+    name = re.sub(r'[^a-zA-Z0-9_-]', '_', name)
+    return f"{name}.md"
+
+# Function to format YAML values correctly, avoiding quotes around internal links
+def format_yaml_value(value):
+    if pd.notna(value) and value:
+        return value  # Ensure regular values are used as-is
+    return ''
+
+# Iterate over rows and create markdown files
+for _, row in df.iterrows():
+    first_name = str(row['First Name']).strip()
+    last_name = str(row['Last Name']).strip()
+    filename = sanitize_filename(f"{first_name}_{last_name}")
+    
+    company = f"[[{row['Company']}]]" if pd.notna(row['Company']) else ""
+    position_category = f"[[{row['Position Category']}]]" if pd.notna(row['Position Category']) else ""
+    
+    yaml_content = f"""---
+Company: |-
+  {company}
+LinkedIn Company: {format_yaml_value(row['LinkedIn_Company'])}
+Position: {format_yaml_value(row['Position'])}
+Position Category: |-
+  {position_category}
+Connected on: {format_yaml_value(row['Connected On'])}
+city: 
+state: 
+Source: LinkedIn download 20250302
+---
+
+[LinkedIn Profile]({row['URL']})
+"""
+    
+    # Write to markdown file
+    with open(os.path.join(output_dir, filename), "w", encoding="utf-8") as f:
+        f.write(yaml_content)
+    
+    print(f"Created: {filename}")
+
+print("All markdown files have been created successfully!")
